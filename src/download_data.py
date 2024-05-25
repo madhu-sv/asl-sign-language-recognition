@@ -37,5 +37,5 @@ def download_and_extract(url, extract_to='data'):
 
 if __name__ == "__main__":
     # Example URL of the ASL dataset zip file
-    dataset_url = "https://www.example.com/path/to/asl_alphabet.zip"
+    dataset_url = "https://www.kaggle.com/datasets/grassknoted/asl-alphabet/asl_alphabet.zip"
     download_and_extract(dataset_url)
