@@ -24,7 +24,7 @@ def train_model(train_dir, test_dir, epochs=10, batch_size=32):
         validation_data=test_generator
     )
 
-    model.save('../models/asl_model.h5')
+    model.save('../models/asl_model.keras')
 
     test_loss, test_acc = model.evaluate(test_generator)
     print(f'Test accuracy: {test_acc}')
@@ -34,4 +34,9 @@ if __name__ == "__main__":
     train_dir = '../data/asl_alphabet_train'
     test_dir = '../data/asl_alphabet_test'
     
+    if not os.path.exists(train_dir):
+        raise FileNotFoundError(f"Training directory not found: {train_dir}")
+    if not os.path.exists(test_dir):
+        raise FileNotFoundError(f"Test directory not found: {test_dir}")
+
     history = train_model(train_dir, test_dir)
