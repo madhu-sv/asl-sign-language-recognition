@@ -1,7 +1,7 @@
 # src/evaluate.py
 
 import tensorflow as tf
-from data_preprocessing import create_data_generators
+from data_preprocessing_tfdata import create_data_generators
 
 def evaluate_model(test_dir):
     """
@@ -10,10 +10,10 @@ def evaluate_model(test_dir):
     Args:
         test_dir (str): Path to the test data directory.
     """
-    test_generator = create_data_generators(test_dir, test_dir)[1]  # Only need test generator
-    model = tf.keras.models.load_model('../models/asl_model.h5')
+    _, test_dataset, num_classes = create_data_generators(test_dir=test_dir, batch_size=32)
+    model = tf.keras.models.load_model('../models/asl_model.keras')
 
-    test_loss, test_acc = model.evaluate(test_generator)
+    test_loss, test_acc = model.evaluate(test_dataset)
     print(f'Test accuracy: {test_acc}')
     return test_loss, test_acc
 

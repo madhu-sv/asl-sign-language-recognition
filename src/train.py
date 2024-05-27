@@ -2,12 +2,12 @@
 
 import os
 import tensorflow as tf
-from data_preprocessing import create_data_generators
+from data_preprocessing_tfdata import create_data_generators
 from model import build_model
 
-def train_model(train_dir, test_dir, epochs=10, batch_size=32):
+def train_model(train_dir, test_dir, epochs=50, batch_size=32):
     """
-    Train the CNN model on the ASL dataset.
+    Train the CNN model on the ASL dataset using tf.data.
     
     Args:
         train_dir (str): Path to the training data directory.
@@ -15,18 +15,25 @@ def train_model(train_dir, test_dir, epochs=10, batch_size=32):
         epochs (int): Number of epochs to train the model.
         batch_size (int): Batch size for training.
     """
-    train_generator, test_generator = create_data_generators(train_dir, test_dir, batch_size=batch_size)
-    model = build_model(num_classes=len(train_generator.class_indices))
+    train_dataset, test_dataset, num_classes = create_data_generators(train_dir, test_dir, batch_size=batch_size)
+    
+    print(f"Number of classes: {num_classes}")
+    
+    model = build_model(num_classes=num_classes)
+
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+    model_checkpoint = tf.keras.callbacks.ModelCheckpoint('../models/best_asl_model.keras', save_best_only=True)
 
     history = model.fit(
-        train_generator,
+        train_dataset,
         epochs=epochs,
-        validation_data=test_generator
+        validation_data=test_dataset,
+        callbacks=[early_stopping, model_checkpoint]
     )
 
     model.save('../models/asl_model.keras')
 
-    test_loss, test_acc = model.evaluate(test_generator)
+    test_loss, test_acc = model.evaluate(test_dataset)
     print(f'Test accuracy: {test_acc}')
     return history
 

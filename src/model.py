@@ -2,7 +2,7 @@
 
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, Input
 from tensorflow.keras.regularizers import l2
 
 def build_model(input_shape=(64, 64, 3), num_classes=29):
@@ -17,7 +17,8 @@ def build_model(input_shape=(64, 64, 3), num_classes=29):
         model: A compiled Keras model.
     """
     model = Sequential([
-        Conv2D(32, (3, 3), activation='relu', input_shape=input_shape, kernel_regularizer=l2(0.01)),
+        Input(shape=input_shape),
+        Conv2D(32, (3, 3), activation='relu', kernel_regularizer=l2(0.01)),
         MaxPooling2D((2, 2)),
         Dropout(0.25),
         Conv2D(64, (3, 3), activation='relu', kernel_regularizer=l2(0.01)),
