@@ -18,7 +18,7 @@ class ASLApp:
         self.video_thread = threading.Thread(target=self.video_loop)
         self.video_thread.start()
 
-    def load_model(self, model_path='../models/asl_model.h5'):
+    def load_model(self, model_path='../models/asl_model.keras'):
         self.model = tf.keras.models.load_model(model_path)
 
     def preprocess_frame(self, frame, img_size=(64, 64)):
